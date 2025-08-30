@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 05:41:25 by btuncer           #+#    #+#             */
-/*   Updated: 2025/08/28 08:39:13 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/08/30 06:02:50 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 #include <unistd.h>
 #include <pthread.h>
 #include "constructors.h"
+
+long long	current_time_ms(void);
+void philo_act(t_philo *philo, char action);
 
 void create_philos(t_dining *dining)
 {
@@ -42,6 +45,42 @@ void create_philos(t_dining *dining)
     }   
 }
 
+int poke(bool fetch)
+{
+    static int poked = 0;
+    
+    if (fetch)
+        return (poked);
+    else
+    {
+        poked++;
+        return (-1);
+    }
+}
+
+long long timer(bool calibrate, bool fetch)
+{
+    static long long calibration = 0;
+
+    if (calibrate)
+    {
+        calibration = current_time_ms();
+        return (current_time_ms() - calibration);
+    }
+    else if (fetch)
+        return (current_time_ms() - calibration);
+    return (-1);
+}
+
+bool checkered_flag(bool wave)
+{
+    static bool flag = false;
+    
+    if (wave)
+        flag = true;
+    return (flag);
+}
+
 t_dining *serve(int argc, char **argv)
 {
     t_dining *dining;
@@ -51,8 +90,7 @@ t_dining *serve(int argc, char **argv)
     //     return (NULL);
     // if (argc == 6)
     //     dining->optional_arg = true;
-
-    dining->number_of_philos = 500;
+    dining->number_of_philos = 199;
     create_philos(dining);
     return (dining);
 }
@@ -61,7 +99,11 @@ void *routine(void *arg)
 {
     t_philo *philo = (t_philo *)arg;
 
-    printf("philo %d on duty!\n", philo->id);
+    // printf("philo %d on duty!\n", philo->id);
+    poke(false);
+    while (checkered_flag(false) == false)
+        usleep(1);
+    philo_act(philo, 't');
     pthread_exit(NULL);
 }
 
@@ -78,7 +120,12 @@ int main(int argc, char **argv)
         pthread_create(&thread, NULL, routine, curr_philo);
         curr_philo = curr_philo->next_philo;
     }
-    usleep(5000000);
+    while (poke(true) < dining->number_of_philos)
+        usleep(1);
+    printf("> sys: ready! poked %i times. timer at: %lld\n", poke(true), timer(true, true));
+    timer(true, true);
+    checkered_flag(true);
+    usleep(10000000);
 }
 
 // int main(int argc, char **argv)

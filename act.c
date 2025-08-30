@@ -6,12 +6,15 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:54:30 by btuncer           #+#    #+#             */
-/*   Updated: 2025/08/28 01:17:43 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/08/30 09:08:22 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "philo.h"
+
+long long	current_time_ms(void);
+long long timer(bool calibrate, bool fetch);
 
 void philo_act(t_philo *philo, char action)
 {
@@ -22,9 +25,13 @@ void philo_act(t_philo *philo, char action)
     //     philo->ate_at = 10;
     philo->status = action;
     if (action == 'e')
-        printf("philo %d is now eating.\n", id);
+        printf("%lld %d is eating\n", timer(false, true), id);
     else if (action == 's')
-        printf("philo %d is now sleeping.\n", id);
+        printf("%lld %d is sleeping\n", timer(false, true), id);
     else if (action == 't')
-        printf("philo %d is now thinking.\n", id);
+        printf("%lld %d is thinking\n", timer(false, true), id);
+    else if (action == 'f')
+        printf("%lld %d has taken a fork\n", timer(false, true), id);
+    else if (action == 'd')
+        printf("%lld %d died\n", timer(true, false), id);
 }
