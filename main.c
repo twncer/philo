@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 05:41:25 by btuncer           #+#    #+#             */
-/*   Updated: 2025/08/30 06:02:50 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/08/31 05:27:32 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,20 @@ long long timer(bool calibrate, bool fetch)
 bool checkered_flag(bool wave)
 {
     static bool flag = false;
-    
+    bool result;
+
+    //lock mutex
+    if (wave)
+        flag = true;
+    result = flag;
+    //unlock mutext
+    return (result);
+}
+
+bool checkered_flag(bool wave)
+{
+    static bool flag = false;
+
     if (wave)
         flag = true;
     return (flag);
@@ -90,7 +103,7 @@ t_dining *serve(int argc, char **argv)
     //     return (NULL);
     // if (argc == 6)
     //     dining->optional_arg = true;
-    dining->number_of_philos = 199;
+    dining->number_of_philos = 100;
     create_philos(dining);
     return (dining);
 }
@@ -103,8 +116,19 @@ void *routine(void *arg)
     poke(false);
     while (checkered_flag(false) == false)
         usleep(1);
+    while (philo->is_alive)
+    {
+        
+    }
     philo_act(philo, 't');
     pthread_exit(NULL);
+}
+
+void slip(int wait)
+{
+    long long target = current_time_ms() + wait;
+    while (current_time_ms() < target)
+        usleep(100);
 }
 
 int main(int argc, char **argv)

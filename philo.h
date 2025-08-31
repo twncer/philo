@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:54:17 by btuncer           #+#    #+#             */
-/*   Updated: 2025/08/28 08:40:47 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/08/30 15:12:47 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,15 @@ typedef struct s_fork t_fork;
 struct s_philo
 {
     int id;
-
+    bool is_alive;
     bool right_hand;
     bool left_hand;   // iki eli tutmaya gerek olmayabilir, çünkü
                       // zaten 2 fork almadan asla yemeyecek. sadece
                       // ikisi de müsaitse alabilecek. o durumda:
     bool forks_held;  // <- daha mantikli olabilir.
-
     char status;
+    long long ate_at;
+    int eat_count;
     t_fork *fork_above;
     t_fork *fork_below;
     t_philo *next_philo;

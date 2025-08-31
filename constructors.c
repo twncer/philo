@@ -6,13 +6,14 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 23:30:16 by btuncer           #+#    #+#             */
-/*   Updated: 2025/08/28 08:40:47 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/08/31 05:35:27 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
 
 t_fork *new_fork()
 {
@@ -61,4 +62,12 @@ t_dining *new_dining()
     dining->eat_count = 0;
     dining->first_philo = NULL;
     return (dining);
+}
+
+pthread_mutex_t *new_mutex()
+{
+    pthread_mutex_t mutex;
+
+    pthread_mutex_init(&mutex, NULL);
+    return (&mutex);
 }
