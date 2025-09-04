@@ -1,5 +1,5 @@
 CFLAGS = 0
 
 all:
-	@cc *.c */*.c -lreadline -o philo
+	@cc *.c */*.c -o philo
 	@echo Made

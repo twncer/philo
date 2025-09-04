@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 05:41:25 by btuncer           #+#    #+#             */
-/*   Updated: 2025/08/31 05:27:32 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/04 10:11:03 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 #include <unistd.h>
 #include <pthread.h>
 #include "constructors.h"
+#include "philo.h"
 
 long long	current_time_ms(void);
 void philo_act(t_philo *philo, char action);
+void dump_gc();
 
 void create_philos(t_dining *dining)
 {
@@ -48,7 +50,7 @@ void create_philos(t_dining *dining)
 int poke(bool fetch)
 {
     static int poked = 0;
-    
+
     if (fetch)
         return (poked);
     else
@@ -74,6 +76,7 @@ long long timer(bool calibrate, bool fetch)
 
 bool checkered_flag(bool wave)
 {
+    static pthread_mutex_t *mutex = NULL;
     static bool flag = false;
     bool result;
 
@@ -85,25 +88,27 @@ bool checkered_flag(bool wave)
     return (result);
 }
 
-bool checkered_flag(bool wave)
-{
-    static bool flag = false;
+// bool checkered_flag(bool wave)
+// {
+//     static bool flag = false;
 
-    if (wave)
-        flag = true;
-    return (flag);
-}
+//     if (wave)
+//         flag = true;
+//     return (flag);
+// }
 
 t_dining *serve(int argc, char **argv)
 {
     t_dining *dining;
 
+    printf("new_dining\n");
     dining = new_dining();
+    printf("new_dining sooo\n");
     // if (argc < 5 || argc > 6)
     //     return (NULL);
     // if (argc == 6)
     //     dining->optional_arg = true;
-    dining->number_of_philos = 100;
+    dining->number_of_philos = 15;
     create_philos(dining);
     return (dining);
 }
@@ -126,9 +131,18 @@ void *routine(void *arg)
 
 void slip(int wait)
 {
-    long long target = current_time_ms() + wait;
+    long long target;
+
+    target = current_time_ms() + wait;
     while (current_time_ms() < target)
         usleep(100);
+}
+
+__attribute__((destructor))
+void cya()
+{
+    printf("cya!\n");
+    dump_gc();
 }
 
 int main(int argc, char **argv)
@@ -149,7 +163,8 @@ int main(int argc, char **argv)
     printf("> sys: ready! poked %i times. timer at: %lld\n", poke(true), timer(true, true));
     timer(true, true);
     checkered_flag(true);
-    usleep(10000000);
+    usleep(5000000);
+    exit(0);
 }
 
 // int main(int argc, char **argv)

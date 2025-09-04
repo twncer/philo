@@ -6,21 +6,23 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 23:30:16 by btuncer           #+#    #+#             */
-/*   Updated: 2025/08/31 05:35:27 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/03 21:40:02 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include "philo.h"
+
+void *alloc(ssize_t size);
 
 t_fork *new_fork()
 {
     t_fork *fork;
     static int id = 1;
 
-    fork = malloc(sizeof(t_fork));
+    fork = (t_fork *)alloc(sizeof(t_fork));
     if (!fork)
         exit(1);
     fork->id = id;
@@ -34,9 +36,8 @@ t_philo *new_philo()
     t_philo *philo;
     static int id = 1;
 
-    philo = malloc(sizeof(t_philo));
-    if (!philo)
-        exit(1);
+    philo = alloc(sizeof(t_philo));
+
     philo->id = id;
     philo->forks_held = false;
     philo->status = 'T';
@@ -51,10 +52,9 @@ t_dining *new_dining()
 {
     t_dining *dining;
 
-    dining = malloc(sizeof(t_dining));
-    if (!dining)
-        exit(1);
+    dining = alloc(sizeof(t_dining));
     dining->optional_arg = false;
+    
     dining->number_of_philos = 0;
     dining->time_to_die = 0;
     dining->time_to_eat = 0;
@@ -66,8 +66,9 @@ t_dining *new_dining()
 
 pthread_mutex_t *new_mutex()
 {
-    pthread_mutex_t mutex;
+    pthread_mutex_t *mutex;
 
-    pthread_mutex_init(&mutex, NULL);
-    return (&mutex);
+    mutex = alloc(sizeof(pthread_mutex_t));
+    pthread_mutex_init(mutex, NULL);
+    return (mutex);
 }

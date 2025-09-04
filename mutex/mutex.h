@@ -1,18 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   constructors.h                                     :+:      :+:    :+:   */
+/*   mutex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/27 23:51:07 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/04 10:08:32 by btuncer          ###   ########.fr       */
+/*   Created: 2025/09/03 15:20:09 by btuncer           #+#    #+#             */
+/*   Updated: 2025/09/03 15:20:28 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include <pthread.h>
 
-t_fork *new_fork();
-t_philo *new_philo();
-t_dining *new_dining();
-pthread_mutex_t *new_mutex();
+pthread_mutex_t *mutex;

@@ -6,12 +6,16 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:54:17 by btuncer           #+#    #+#             */
-/*   Updated: 2025/08/30 15:12:47 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/03 20:40:16 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdbool.h>
-#include <unistd.h>
+#ifndef PHILO_H
+# define PHILO_H
+
+# include <stdbool.h>
+# include <unistd.h>
+# include <pthread.h>
 
 typedef struct s_philo t_philo;
 typedef struct s_dining t_dining;
@@ -49,4 +53,7 @@ struct s_dining
     int time_to_sleep;
     int eat_count;
     t_philo *first_philo;
+    pthread_mutex_t *mutexes;
 };
+
+#endif
