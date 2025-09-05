@@ -6,11 +6,12 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 19:21:17 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/04 10:07:05 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/05 00:11:15 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <sys/types.h>
+#include <stdio.h>
 #include "gc.h"
 
 t_gc *get_gc()

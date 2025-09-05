@@ -1,15 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mutex.h                                            :+:      :+:    :+:   */
+/*   routine.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/03 15:20:09 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/03 15:20:28 by btuncer          ###   ########.fr       */
+/*   Created: 2025/09/05 07:22:55 by btuncer           #+#    #+#             */
+/*   Updated: 2025/09/05 07:23:31 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <pthread.h>
+#include "philo.h"
 
-pthread_mutex_t *mutex;
+void *routine(void *arg)
+{
+    t_philo *philo = (t_philo *)arg;
+
+    poke(false);
+    while (checkered_flag(false) == false)
+        ;
+    if (philo->id % 2 == 0)
+        zzz(10);
+    
+    pthread_exit(NULL);
+}

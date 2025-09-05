@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 23:30:16 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/03 21:40:02 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/05 07:16:24 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,33 +17,30 @@
 
 void *alloc(ssize_t size);
 
-t_fork *new_fork()
+pthread_t *new_thread()
 {
-    t_fork *fork;
-    static int id = 1;
+    pthread_t *thread;
 
-    fork = (t_fork *)alloc(sizeof(t_fork));
-    if (!fork)
-        exit(1);
-    fork->id = id;
-    fork->taken = false;
-    id++;
-    return (fork);
+    thread = alloc(sizeof(pthread_t));
+    return (thread);
 }
 
 t_philo *new_philo()
 {
     t_philo *philo;
     static int id = 1;
-
+    static int fork_id = 1;
+    
     philo = alloc(sizeof(t_philo));
 
     philo->id = id;
     philo->forks_held = false;
     philo->status = 'T';
-    philo->fork_above = new_fork();
-    philo->fork_below = NULL;
+    philo->fork_above = fork_id;
+    fork_id++;
+    philo->fork_below = -1;
     philo->next_philo = NULL;
+    philo->thread = new_thread();
     id++;
     return (philo);
 }
@@ -61,6 +58,8 @@ t_dining *new_dining()
     dining->time_to_sleep = 0;
     dining->eat_count = 0;
     dining->first_philo = NULL;
+    dining->mutexes = NULL;
+    dining->running = true;
     return (dining);
 }
 

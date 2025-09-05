@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:54:17 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/03 20:40:16 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/05 07:23:20 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,12 @@ struct s_philo
     char status;
     long long ate_at;
     int eat_count;
-    t_fork *fork_above;
-    t_fork *fork_below;
-    t_philo *next_philo;
-};
+    pthread_t *thread;
 
-struct s_fork
-{
-    int id;
-    bool taken;
+    int fork_above;
+    int fork_below;
+
+    t_philo *next_philo;
 };
 
 struct s_dining
@@ -52,8 +49,20 @@ struct s_dining
     int time_to_eat;
     int time_to_sleep;
     int eat_count;
+    bool running;
     t_philo *first_philo;
-    pthread_mutex_t *mutexes;
+    pthread_mutex_t **mutexes;
+    pthread_mutex_t *forks;
 };
+
+t_dining *get_dining(t_dining *init);
+t_dining *serve(int argc, char **argv);
+long long	current_time_ms(void);
+void zzz(int wait);
+long long timer(bool calibrate, bool fetch);
+t_philo *new_philo();
+t_dining *new_dining();
+pthread_mutex_t *new_mutex();
+void *routine(void *arg);
 
 #endif
