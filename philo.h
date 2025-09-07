@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:54:17 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/05 07:23:20 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/07 17:50:02 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,15 @@ struct s_philo
 {
     int id;
     bool is_alive;
-    bool right_hand;
-    bool left_hand;   // iki eli tutmaya gerek olmayabilir, çünkü
-                      // zaten 2 fork almadan asla yemeyecek. sadece
-                      // ikisi de müsaitse alabilecek. o durumda:
-    bool forks_held;  // <- daha mantikli olabilir.
     char status;
     long long ate_at;
     int eat_count;
-    pthread_t *thread;
-
+    
     int fork_above;
     int fork_below;
-
+    
     t_philo *next_philo;
+    pthread_t *thread;
 };
 
 struct s_dining
@@ -50,19 +45,39 @@ struct s_dining
     int time_to_sleep;
     int eat_count;
     bool running;
+
     t_philo *first_philo;
+    
     pthread_mutex_t **mutexes;
     pthread_mutex_t *forks;
+
+    pthread_t *monitor_thread;
 };
 
-t_dining *get_dining(t_dining *init);
+int	ft_atoi(const char *nptr);
+
 t_dining *serve(int argc, char **argv);
+t_dining *get_dining(t_dining *init);
+void philo_act(t_philo *philo, char action);
+
 long long	current_time_ms(void);
 void zzz(int wait);
 long long timer(bool calibrate, bool fetch);
+
 t_philo *new_philo();
 t_dining *new_dining();
 pthread_mutex_t *new_mutex();
+
+int poke(bool fetch);
+bool checkered_flag(bool wave);
 void *routine(void *arg);
+
+void print_msg(int philo_id, char *msg);
+void eat(t_philo *philo);
+void philo_sleep(t_philo *philo);
+void think(t_philo *philo);
+void check_philo(t_philo *philo);
+
+void leave_();
 
 #endif

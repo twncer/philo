@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 23:30:16 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/05 07:16:24 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/07 16:59:13 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,14 @@ t_philo *new_philo()
 {
     t_philo *philo;
     static int id = 1;
-    static int fork_id = 1;
+    static int fork_id = 0;
     
     philo = alloc(sizeof(t_philo));
 
     philo->id = id;
-    philo->forks_held = false;
     philo->status = 'T';
+    philo->ate_at = 0;
+    philo->eat_count = 0;
     philo->fork_above = fork_id;
     fork_id++;
     philo->fork_below = -1;
@@ -60,6 +61,7 @@ t_dining *new_dining()
     dining->first_philo = NULL;
     dining->mutexes = NULL;
     dining->running = true;
+    dining->monitor_thread = new_thread();
     return (dining);
 }
 

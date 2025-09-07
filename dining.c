@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 23:50:35 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/05 07:18:25 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/07 18:31:29 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,14 @@ void set_mutexes(t_dining *dining)
 {
     int fork_count;
     
-    dining->mutexes = alloc(sizeof(pthread_mutex_t *) * 3);
+    dining->mutexes = alloc(sizeof(pthread_mutex_t *) * 7);
     dining->mutexes[0] = new_mutex();
     dining->mutexes[1] = new_mutex();
     dining->mutexes[2] = new_mutex();
+    dining->mutexes[3] = new_mutex();
+    dining->mutexes[4] = new_mutex();
+    dining->mutexes[5] = new_mutex();
+    dining->mutexes[6] = new_mutex();
     dining->forks = alloc(sizeof(pthread_mutex_t) * dining->number_of_philos);
     fork_count = 0;
     while (fork_count < dining->number_of_philos)
@@ -70,14 +74,21 @@ t_dining *serve(int argc, char **argv)
     t_dining *dining;
 
     dining = new_dining();
-    // if (argc < 5 || argc > 6)
-    //     return (NULL);
-    // if (argc == 6)
-    //     dining->optional_arg = true;
-    dining->number_of_philos = 6;
+    if (argc < 5 || argc > 6)
+        return (NULL);
+    if (argc == 6)
+    {
+        dining->optional_arg = true;
+        dining->eat_count = ft_atoi(argv[5]);
+    }
+    else
+        dining->optional_arg = false;
+    dining->number_of_philos = ft_atoi(argv[1]);
+    dining->time_to_die = ft_atoi(argv[2]);
+    dining->time_to_eat = ft_atoi(argv[3]);
+    dining->time_to_sleep = ft_atoi(argv[4]);
     create_philos(dining);
     set_mutexes(dining);
     get_dining(dining);
     return (dining);
 }
-
