@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 07:22:55 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/08 17:53:04 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/08 19:35:49 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ void leave_()
     pthread_mutex_lock(dining->mutexes[MTX_RUNNING]);
     get_dining(NULL)->running = false;
     pthread_mutex_unlock(dining->mutexes[MTX_RUNNING]);
-    // pthread_mutex_lock(get_dining(NULL)->mutexes[MTX_PRINT]);
 }
 
 void check_philo(t_philo *philo)
@@ -61,11 +60,10 @@ void check_philo(t_philo *philo)
 
     dining = get_dining(NULL);
     pthread_mutex_lock(dining->mutexes[MTX_ATE_AT]);
-    if (timer(false, true) >= get_dining(NULL)->time_to_die + philo->ate_at)
+    if (timer(false, true) >= dining->time_to_die + philo->ate_at)
     {
-        // pthread_mutex_lock(dining->mutexes[MTX_PRINT]);
         pthread_mutex_unlock(dining->mutexes[MTX_ATE_AT]);
-        print_msg(philo->id, "died");
+        printf("%lld %d died\n", timer(false, true), philo->id);
         leave_();
         return ;
     }

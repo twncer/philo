@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:54:30 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/08 17:19:35 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/08 19:27:18 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ void print_msg(int philo_id, char *msg)
     if (dining->running)
     {
         pthread_mutex_unlock(dining->mutexes[MTX_RUNNING]);
-        pthread_mutex_lock(get_dining(NULL)->mutexes[MTX_PRINT]);
+        pthread_mutex_lock(dining->mutexes[MTX_PRINT]);
         printf("%lld %d %s\n", timer(false, true), philo_id, msg);
-        pthread_mutex_unlock(get_dining(NULL)->mutexes[MTX_PRINT]);
+        pthread_mutex_unlock(dining->mutexes[MTX_PRINT]);
         return ;
     }
     pthread_mutex_unlock(dining->mutexes[MTX_RUNNING]);
@@ -110,7 +110,7 @@ void think(t_philo *philo)
 void philo_act(t_philo *philo, char action)
 {
     t_dining *dining;
-    
+
     dining = get_dining(NULL);
     if (action == 'e')
         eat(philo);
