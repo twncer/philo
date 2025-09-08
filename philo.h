@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:54:17 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/07 17:50:02 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/08 10:29:18 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,15 @@
 # include <stdbool.h>
 # include <unistd.h>
 # include <pthread.h>
+
+# define MTX_POKE 0
+# define MTX_CHECKERED 1
+# define MTX_ACT 2
+# define MTX_TIMER 3
+# define MTX_PRINT 4
+# define MTX_RUNNING 5
+# define MTX_EAT_COUNT 6
+# define MTX_ATE_AT 7
 
 typedef struct s_philo t_philo;
 typedef struct s_dining t_dining;
@@ -79,5 +88,6 @@ void think(t_philo *philo);
 void check_philo(t_philo *philo);
 
 void leave_();
+void *monitor_routine();
 
 #endif

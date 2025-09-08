@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:54:30 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/07 18:42:00 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/08 17:19:35 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,19 @@
 
 void print_msg(int philo_id, char *msg)
 {
-    pthread_mutex_lock(get_dining(NULL)->mutexes[4]);
-    printf("%lld %d %s\n", timer(false, true), philo_id, msg);
-    pthread_mutex_unlock(get_dining(NULL)->mutexes[4]);
+    t_dining *dining;
+
+    dining = get_dining(NULL);
+    pthread_mutex_lock(dining->mutexes[MTX_RUNNING]);
+    if (dining->running)
+    {
+        pthread_mutex_unlock(dining->mutexes[MTX_RUNNING]);
+        pthread_mutex_lock(get_dining(NULL)->mutexes[MTX_PRINT]);
+        printf("%lld %d %s\n", timer(false, true), philo_id, msg);
+        pthread_mutex_unlock(get_dining(NULL)->mutexes[MTX_PRINT]);
+        return ;
+    }
+    pthread_mutex_unlock(dining->mutexes[MTX_RUNNING]);
 }
 
 void take_forks(t_philo *philo)
@@ -60,14 +70,26 @@ void release_forks(t_philo *philo)
 
 void eat(t_philo *philo)
 {
+    t_dining *dining;
+    
+    dining = get_dining(NULL);
     check_philo(philo);
     take_forks(philo);
     check_philo(philo); 
+
+    pthread_mutex_lock(dining->mutexes[MTX_ATE_AT]);
     philo->ate_at = timer(false, true);
-    philo->eat_count++;
+    pthread_mutex_unlock(dining->mutexes[MTX_ATE_AT]);
+    
     print_msg(philo->id, "is eating");
+    
     zzz(get_dining(NULL)->time_to_eat);
-    release_forks(philo); 
+
+    pthread_mutex_lock(dining->mutexes[MTX_EAT_COUNT]);
+    philo->eat_count++;
+    pthread_mutex_unlock(dining->mutexes[MTX_EAT_COUNT]);
+    
+    release_forks(philo);
 }
 
 void philo_sleep(t_philo *philo)
@@ -87,25 +109,23 @@ void think(t_philo *philo)
 
 void philo_act(t_philo *philo, char action)
 {
-    int id;
-
-    pthread_mutex_lock(get_dining(NULL)->mutexes[2]);
-    id = philo->id;
-    if (!get_dining(NULL)->running)
-    {
-        pthread_mutex_unlock(get_dining(NULL)->mutexes[2]);
-        return ;
-    }
-    pthread_mutex_unlock(get_dining(NULL)->mutexes[2]);
+    t_dining *dining;
     
+    dining = get_dining(NULL);
     if (action == 'e')
         eat(philo);
     else if (action == 's')
         philo_sleep(philo);
     else if (action == 't')
         think(philo);
-    
-    // else if (action == 'd')
-    //     printf("%lld %d died\n", timer(false, true), id);
-    // philo->status = action;
 }
+
+// int id;
+// pthread_mutex_lock(dining->mutexes[MTX_ACT]);
+// id = philo->id;
+// if (!dining->running)
+// {
+//     pthread_mutex_unlock(get_dining(NULL)->mutexes[MTX_ACT]);
+    // return ;
+// }
+// pthread_mutex_unlock(get_dining(NULL)->mutexes[MTX_ACT]);

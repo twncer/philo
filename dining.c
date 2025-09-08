@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 23:50:35 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/07 18:31:29 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/08 10:29:25 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void set_mutexes(t_dining *dining)
 {
     int fork_count;
     
-    dining->mutexes = alloc(sizeof(pthread_mutex_t *) * 7);
+    dining->mutexes = alloc(sizeof(pthread_mutex_t *) * 8);
     dining->mutexes[0] = new_mutex();
     dining->mutexes[1] = new_mutex();
     dining->mutexes[2] = new_mutex();
@@ -51,6 +51,7 @@ void set_mutexes(t_dining *dining)
     dining->mutexes[4] = new_mutex();
     dining->mutexes[5] = new_mutex();
     dining->mutexes[6] = new_mutex();
+    dining->mutexes[7] = new_mutex();
     dining->forks = alloc(sizeof(pthread_mutex_t) * dining->number_of_philos);
     fork_count = 0;
     while (fork_count < dining->number_of_philos)
