@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:54:30 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/08 19:27:18 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/09 00:51:59 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,16 @@ void print_msg(int philo_id, char *msg)
     t_dining *dining;
 
     dining = get_dining(NULL);
+    pthread_mutex_lock(dining->mutexes[MTX_PRINT]);
     pthread_mutex_lock(dining->mutexes[MTX_RUNNING]);
     if (dining->running)
     {
         pthread_mutex_unlock(dining->mutexes[MTX_RUNNING]);
-        pthread_mutex_lock(dining->mutexes[MTX_PRINT]);
         printf("%lld %d %s\n", timer(false, true), philo_id, msg);
         pthread_mutex_unlock(dining->mutexes[MTX_PRINT]);
         return ;
     }
+    pthread_mutex_unlock(dining->mutexes[MTX_PRINT]);
     pthread_mutex_unlock(dining->mutexes[MTX_RUNNING]);
 }
 
@@ -73,16 +74,22 @@ void eat(t_philo *philo)
     t_dining *dining;
     
     dining = get_dining(NULL);
-    check_philo(philo);
     take_forks(philo);
-    check_philo(philo); 
 
+    pthread_mutex_lock(dining->mutexes[MTX_EAT_COUNT]);
+    if (dining->optional_arg && philo->eat_count && philo->eat_count == dining->eat_count)
+    {
+        pthread_mutex_unlock(dining->mutexes[MTX_EAT_COUNT]);
+        return ;
+    }
+    pthread_mutex_unlock(dining->mutexes[MTX_EAT_COUNT]);
+    
     pthread_mutex_lock(dining->mutexes[MTX_ATE_AT]);
     philo->ate_at = timer(false, true);
     pthread_mutex_unlock(dining->mutexes[MTX_ATE_AT]);
     
     print_msg(philo->id, "is eating");
-    
+    check_eat_count(get_dining(NULL));
     zzz(get_dining(NULL)->time_to_eat);
 
     pthread_mutex_lock(dining->mutexes[MTX_EAT_COUNT]);

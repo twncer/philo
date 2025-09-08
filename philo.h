@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:54:17 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/08 10:29:18 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/09 00:47:03 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,10 @@ void print_msg(int philo_id, char *msg);
 void eat(t_philo *philo);
 void philo_sleep(t_philo *philo);
 void think(t_philo *philo);
-void check_philo(t_philo *philo);
+t_philo *check_philo(t_philo *philo);
 
 void leave_();
 void *monitor_routine();
+int check_eat_count(t_dining *dining);
 
 #endif

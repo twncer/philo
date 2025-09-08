@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 07:22:55 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/08 19:35:49 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/09 00:12:56 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void leave_()
     pthread_mutex_unlock(dining->mutexes[MTX_RUNNING]);
 }
 
-void check_philo(t_philo *philo)
+t_philo *check_philo(t_philo *philo)
 {
     t_dining *dining;
 
@@ -63,11 +63,14 @@ void check_philo(t_philo *philo)
     if (timer(false, true) >= dining->time_to_die + philo->ate_at)
     {
         pthread_mutex_unlock(dining->mutexes[MTX_ATE_AT]);
-        printf("%lld %d died\n", timer(false, true), philo->id);
+        pthread_mutex_lock(dining->mutexes[MTX_PRINT]);
+        philo->is_alive = false;
+        philo->ate_at = timer(false, true);
         leave_();
-        return ;
+        return (philo);
     }
     pthread_mutex_unlock(dining->mutexes[MTX_ATE_AT]);
+    return (NULL);
 }
 
 void *routine(void *arg)
