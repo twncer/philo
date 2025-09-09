@@ -6,11 +6,12 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 19:27:36 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/03 21:39:59 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/09 10:35:33 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <sys/types.h>
 
 typedef struct s_trash t_trash;
 typedef struct s_gc t_gc;

@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/08 10:14:22 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/09 00:28:36 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/09 14:57:50 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include "philo.h"
 
-int check_eat_count(t_dining *dining)
+bool check_eat_count(t_dining *dining)
 {
     t_philo *curr_philo;
     int eat_count;
@@ -30,14 +30,14 @@ int check_eat_count(t_dining *dining)
         if (curr_philo && curr_philo->eat_count != eat_count)
         {
             pthread_mutex_unlock(dining->mutexes[MTX_EAT_COUNT]);
-            return (-1);
+            return (false);
         }
         pthread_mutex_unlock(dining->mutexes[MTX_EAT_COUNT]);
     }
-    return (eat_count);
+    return (eat_count == dining->eat_count);
 }
 
-t_philo *check_philos(t_dining *dining)
+t_philo *check_all_philos(t_dining *dining)
 {
     t_philo *curr_philo;
     t_philo *philo;
@@ -66,19 +66,19 @@ void *monitor_routine()
     while (dining->running)
     {
         pthread_mutex_unlock(dining->mutexes[MTX_RUNNING]);
-        philo = check_philos(dining);
+        philo = check_all_philos(dining);
         if (philo)
         {
             pthread_mutex_lock(dining->mutexes[MTX_RUNNING]);
             break;
         }
-        if (dining->optional_arg)
+        if (dining->optional_arg && check_eat_count(dining))
         {
-            if (check_eat_count(dining) == dining->eat_count)
-            {
-                pthread_mutex_lock(dining->mutexes[MTX_PRINT]);
-                leave_();
-            }
+            pthread_mutex_lock(dining->mutexes[MTX_PRINT]);
+            leave_();
+            pthread_mutex_lock(dining->mutexes[MTX_RUNNING]);
+            philo = NULL;
+            break ;
         }
         pthread_mutex_lock(dining->mutexes[MTX_RUNNING]);
     }

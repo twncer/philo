@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 23:30:16 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/07 16:59:13 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/09 18:36:37 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ t_philo *new_philo()
     philo->ate_at = 0;
     philo->eat_count = 0;
     philo->fork_above = fork_id;
+    philo->is_alive = true;
     fork_id++;
     philo->fork_below = -1;
     philo->next_philo = NULL;
@@ -70,6 +71,10 @@ pthread_mutex_t *new_mutex()
     pthread_mutex_t *mutex;
 
     mutex = alloc(sizeof(pthread_mutex_t));
-    pthread_mutex_init(mutex, NULL);
+    if (pthread_mutex_init(mutex, NULL))
+    {
+        printf("err: pthread_mutex_init failed\n");
+        leave_();
+    }
     return (mutex);
 }

@@ -3,6 +3,8 @@
         "stdbool.h": "c",
         "constructors.h": "c",
         "time.h": "c",
-        "pthread.h": "c"
+        "pthread.h": "c",
+        "philo.h": "c",
+        "gc.h": "c"
     }
 }

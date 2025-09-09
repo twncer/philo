@@ -6,13 +6,20 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/03 19:21:17 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/07 18:47:05 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/09 10:37:41 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <sys/types.h>
 #include <stdio.h>
 #include "gc.h"
+#include "./../philo.h"
+
+void *gc_exit()
+{
+    leave_();
+    return (NULL);  
+}
 
 t_gc *get_gc()
 {
@@ -21,7 +28,7 @@ t_gc *get_gc()
     if (!gc)
         gc = new_gc();
     if (!gc)
-        exit(1);
+        return (gc_exit());
     return (gc);
 }
 
@@ -49,10 +56,10 @@ void *alloc(ssize_t size)
     
     mem = malloc(size);
     if (!mem)
-        exit(1);
+        return (gc_exit());
     trash = new_trash(mem);
     if (!trash)
-        exit(1);
+        return (gc_exit());
     insert_to_gc(trash);
     return (mem);
 }

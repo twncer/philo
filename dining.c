@@ -6,12 +6,13 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 23:50:35 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/08 10:29:25 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/09 18:34:53 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 #include "./gc/gc.h"
+#include <stdio.h>
 
 void create_philos(t_dining *dining)
 {
@@ -36,7 +37,7 @@ void create_philos(t_dining *dining)
             if (philo_count == 0)
                 dining->first_philo->fork_below = curr_philo->fork_above;
         }
-    }   
+    }
 }
 
 void set_mutexes(t_dining *dining)
@@ -70,13 +71,23 @@ t_dining *get_dining(t_dining *init)
     return (dining);
 }
 
+bool is_args_valid(t_dining *d)
+{
+    if (d->number_of_philos < 1 || d->time_to_die < 1
+        || d->time_to_eat < 1 || d->time_to_sleep < 1)
+        return (printf("err: Arguments should be greater than 0\n"), false);
+    if (d->optional_arg && d->eat_count < 1)
+        return (printf("err: Arguments should be greater than 0\n"), false);
+    return (true);
+}
+
 t_dining *serve(int argc, char **argv)
 {
     t_dining *dining;
 
     dining = new_dining();
     if (argc < 5 || argc > 6)
-        return (NULL);
+        return (printf("err: 4 or 5 arguments only.\n"), NULL);
     if (argc == 6)
     {
         dining->optional_arg = true;
@@ -88,6 +99,8 @@ t_dining *serve(int argc, char **argv)
     dining->time_to_die = ft_atoi(argv[2]);
     dining->time_to_eat = ft_atoi(argv[3]);
     dining->time_to_sleep = ft_atoi(argv[4]);
+    if (!is_args_valid(dining))
+        return (NULL);
     create_philos(dining);
     set_mutexes(dining);
     get_dining(dining);
