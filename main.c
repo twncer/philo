@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/24 05:41:25 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/09 20:44:20 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/09 21:13:23 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,15 @@ void thread_err_case()
     printf("err: pthread_create failed\n");
 }
 
-int main(int argc, char **argv)
+bool create_philo_threads()
 {
+    t_dining *dining;
     t_philo *curr_philo;
     bool err;
-
+    
     err = false;
-    if (!serve(argc, argv))
-        return (1);    
-    curr_philo = get_dining(NULL)->first_philo;
+    dining = get_dining(NULL);
+    curr_philo = dining->first_philo;
     while (curr_philo)
     {
         if (pthread_create(curr_philo->thread, NULL, routine, curr_philo))
@@ -55,18 +55,18 @@ int main(int argc, char **argv)
         }
         curr_philo = curr_philo->next_philo;
     }
-    if (!err && pthread_create(get_dining(NULL)->monitor_thread, NULL, monitor_routine, NULL))
+    if (!err && pthread_create(dining->monitor_thread, NULL, monitor_routine, NULL))
         thread_err_case();
+    return (err);
+}
 
-    if (err == false)
-        while (poke(true) < get_dining(NULL)->number_of_philos + 1)
-            usleep(1);
-    
-    
-    timer(true, true);
-    checkered_flag(true);
+bool join_philos(bool err)
+{
+    t_dining *dining;
+    t_philo *curr_philo;
 
-    curr_philo = get_dining(NULL)->first_philo;
+    dining = get_dining(NULL);
+    curr_philo = dining->first_philo;
     while (curr_philo)
     {
         if (!curr_philo->thread)
@@ -76,7 +76,23 @@ int main(int argc, char **argv)
         curr_philo = curr_philo->next_philo;
     }
     if (!err)
-        pthread_join(*(get_dining(NULL)->monitor_thread), NULL);
-    
+        pthread_join(*(dining->monitor_thread), NULL);
+    return (err);
+}
+
+int main(int argc, char **argv)
+{
+    bool err;
+
+    err = false;
+    if (!serve(argc, argv))
+        return (1);    
+    err = create_philo_threads();
+    if (err == false)
+        while (poke(true) < get_dining(NULL)->number_of_philos + 1)
+            usleep(1);
+    timer(true, true);
+    checkered_flag(true);
+    join_philos(err);
     return (0);
 }

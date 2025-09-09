@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 08:32:07 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/09 11:14:15 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/09 21:34:59 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,16 @@ void	zzz(int wait)
 	dining = get_dining(NULL);
 	while (current_time_ms() < target)
 	{
+		pthread_mutex_lock(dining->mutexes[MTX_RUNNING]);
+		if (!dining->running)
+		{
+			pthread_mutex_unlock(dining->mutexes[MTX_RUNNING]);
+			break;
+		}
+		pthread_mutex_unlock(dining->mutexes[MTX_RUNNING]);
 		usleep(200);
 	}
-}
+} // note
 
 long long	timer(bool calibrate, bool fetch)
 {
